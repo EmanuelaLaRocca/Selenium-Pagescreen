@@ -1,5 +1,6 @@
 package org.example;
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -16,7 +17,7 @@ public class Main {
     //
     public static String default_path = "/Users/" + System.getProperty("user.name")+ "/Documents/Pagescreens";//Documents if pc is in english version
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws InterruptedException {
 
 
 
@@ -32,11 +33,12 @@ public class Main {
                 //if "--dest"--> read the next as the destination path
                 dest= args[i + 1];
             } else if (args[i].equals("--dim")) {
-                dest= (int)(args[i + 1]);
+                pixel =  Integer.parseInt((args[i + 1]));//
             }
         }
 
-        Dimension px_to_dim(int pixel);
+       Dimension dimension = px_to_dim(pixel);
+
 
         Path path = Paths.get(dest);
         //if the directory doesn't exist, it will be created
@@ -49,7 +51,6 @@ public class Main {
             }
         }
 
-        float[] dimension = new float[]{1920, 1080};
 
 
         //open ChromeDriver
@@ -58,8 +59,8 @@ public class Main {
 
 
         //maximize window
-        driver.manage().window().maximize();
-
+        driver.manage().window().setSize(dimension);
+     Thread.sleep(1000);
         //take and save screenshot
         try {
             File myScreen = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE );//WebDriver Exception
@@ -78,8 +79,12 @@ public class Main {
 
 
     public static Dimension px_to_dim(int pixel){
-        int width = 0, height = 0;
+        int width = 1920, height = pixel;
         switch (pixel) {
+            case 320:
+                width =320;
+                height= 569;
+                break;
             case 375:
                 width = 375;
                 height = 812;
@@ -92,6 +97,9 @@ public class Main {
                 width = 768;
                 height = 1025;
                 break;
+            case 960:
+                width=960;
+                height =540;
             case 1366:
                 width = 1366;
                 height = 768;
@@ -99,14 +107,15 @@ public class Main {
             case 1024:
                 width = 1024;
                 height = 640;
-            case 1080:
+                break;
+            case 1080, 1920:
                 width = 1920;
                 height = 1080;
-
+                break;
         }
         if (pixel > 1400) {
-            width = pixel;
-            height = 768;
+            width = 1920;
+            height = pixel;
         }
         return new Dimension(width, height);
 
