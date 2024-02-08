@@ -22,7 +22,7 @@ public class Main {
 
         String url = "https://www.google.com";//as default
         String dest = default_path;
-
+        int pixel = 1080;
         //collect args
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("--url")&& args[i+1].contains("www.")&& args[i+1].contains("https://")) {
@@ -31,8 +31,12 @@ public class Main {
             } else if (args[i].equals("--dest")&& args[i + 1].contains("/")) {
                 //if "--dest"--> read the next as the destination path
                 dest= args[i + 1];
+            } else if (args[i].equals("--dim")) {
+                dest= (int)(args[i + 1]);
             }
         }
+
+        Dimension px_to_dim(int pixel);
 
         Path path = Paths.get(dest);
         //if the directory doesn't exist, it will be created
@@ -44,6 +48,9 @@ public class Main {
                 System.err.println("Failed to create directory! " + e.getMessage());
             }
         }
+
+        float[] dimension = new float[]{1920, 1080};
+
 
         //open ChromeDriver
         WebDriver driver=new ChromeDriver(); //Initiating chromedriver
@@ -66,6 +73,42 @@ public class Main {
         }
 
         System.exit(0);
+
+    }
+
+
+    public static Dimension px_to_dim(int pixel){
+        int width = 0, height = 0;
+        switch (pixel) {
+            case 375:
+                width = 375;
+                height = 812;
+                break;
+            case 360:
+                width = 360;
+                height = 640;
+                break;
+            case 768:
+                width = 768;
+                height = 1025;
+                break;
+            case 1366:
+                width = 1366;
+                height = 768;
+                break;
+            case 1024:
+                width = 1024;
+                height = 640;
+            case 1080:
+                width = 1920;
+                height = 1080;
+
+        }
+        if (pixel > 1400) {
+            width = pixel;
+            height = 768;
+        }
+        return new Dimension(width, height);
 
     }
 
